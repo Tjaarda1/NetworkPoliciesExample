@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      student: "true"
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 172.16.0.0/12
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-university-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      student: "true"
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 172.16.0.0/12
+        except:
+          - 172.17.0.0/16
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-faculty-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      student: "true"
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 172.17.0.0/16
+        except: 
+         - 172.17.4.0/24
